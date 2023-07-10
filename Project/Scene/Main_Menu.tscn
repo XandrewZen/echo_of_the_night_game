@@ -1,0 +1,417 @@
+[gd_scene load_steps=27 format=2]
+
+[ext_resource path="res://Script/Main_Menu.gd" type="Script" id=1]
+[ext_resource path="res://Asset/font/Minecraft.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://Asset/rocket.png" type="Texture" id=3]
+[ext_resource path="res://Asset/grad.png" type="Texture" id=4]
+[ext_resource path="res://Asset/enemy_c.png" type="Texture" id=5]
+[ext_resource path="res://Asset/Untitled.png" type="Texture" id=6]
+[ext_resource path="res://Asset/Circle.png" type="Texture" id=7]
+[ext_resource path="res://Asset/Enemy_wingleft.png" type="Texture" id=8]
+[ext_resource path="res://Asset/EnymBody_wINGright.png" type="Texture" id=9]
+[ext_resource path="res://Asset/aurA.png" type="Texture" id=10]
+[ext_resource path="res://Asset/EnymBody_wINGear.png" type="Texture" id=11]
+[ext_resource path="res://Asset/music/mainMenu.ogg" type="AudioStream" id=12]
+
+[sub_resource type="DynamicFont" id=1]
+size = 48
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 32
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 32
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 32
+font_data = ExtResource( 2 )
+
+[sub_resource type="Animation" id=5]
+resource_name = "Idle_Animation"
+length = 2.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Rocket:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1, 2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 768, 368 ), Vector2( 768, 344 ), Vector2( 768, 368 ) ]
+}
+
+[sub_resource type="Animation" id=7]
+resource_name = "Play_trans"
+length = 2.0
+loop = true
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Rocket:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 768, -0.25, 0, 0.25, 0, 768, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 1.69 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("Rocket:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 368, -0.25, 0, 0.77, -11.0232, -282.01, -0.12, 364.074, 0.25, 0 ),
+"times": PoolRealArray( 0, 1.69 )
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 1.9 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "_changing_to_game"
+} ]
+}
+
+[sub_resource type="Animation" id=6]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Rocket:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 768, 368 ) ]
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("Rocket:position:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 768, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
+tracks/2/type = "bezier"
+tracks/2/path = NodePath("Rocket:position:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"points": PoolRealArray( 368, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
+
+[sub_resource type="DynamicFont" id=8]
+size = 128
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=13]
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=14]
+size = 48
+font_data = ExtResource( 2 )
+
+[sub_resource type="PhysicsMaterial" id=9]
+friction = 0.0
+bounce = 1.0
+
+[sub_resource type="CircleShape2D" id=10]
+radius = 40.7922
+
+[sub_resource type="Animation" id=11]
+resource_name = "Enemy_Anime"
+loop = true
+step = 0.01
+tracks/0/type = "value"
+tracks/0/path = NodePath("PivotEnemyWing_pivot:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.25, 0.5, 0.75, 1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ -26.7, 37.0, -26.7, 37.0, -26.7 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("PivotEnemyWing_pivot2:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.25, 0.5, 0.75, 1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ 20.7, -53.4, 12.8, -39.5, 20.7 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Head:rotation_degrees")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.33, 0.71, 1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ -1.70755e-06, 10.0, -10.0, -1.70755e-06 ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("EnemyC:rotation_degrees")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.25, 0.5, 0.71, 1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, -2.0, 2.0, -2.0, 0.0 ]
+}
+
+[sub_resource type="Animation" id=12]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("PivotEnemyWing_pivot:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("PivotEnemyWing_pivot2:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 20.7 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Head:rotation_degrees")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ -1.70755e-06 ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("EnemyC:rotation_degrees")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+
+[node name="Main_Menu" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Grad" type="Sprite" parent="."]
+position = Vector2( 512, 300 )
+texture = ExtResource( 4 )
+
+[node name="Play_Button" type="Button" parent="."]
+margin_left = 64.0
+margin_top = 256.0
+margin_right = 384.0
+margin_bottom = 336.0
+custom_fonts/font = SubResource( 1 )
+text = "Play   "
+
+[node name="Help_Button" type="Button" parent="."]
+margin_left = 64.0
+margin_top = 352.0
+margin_right = 320.0
+margin_bottom = 416.0
+custom_fonts/font = SubResource( 3 )
+text = "Help "
+
+[node name="About_Button" type="Button" parent="."]
+margin_left = 64.0
+margin_top = 432.0
+margin_right = 320.0
+margin_bottom = 496.0
+custom_fonts/font = SubResource( 4 )
+text = "About"
+
+[node name="Exit" type="Button" parent="."]
+margin_left = 64.0
+margin_top = 512.0
+margin_right = 320.0
+margin_bottom = 576.0
+custom_fonts/font = SubResource( 2 )
+text = "Exit   "
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "Idle_Animation"
+anims/Idle_Animation = SubResource( 5 )
+anims/Play_trans = SubResource( 7 )
+anims/RESET = SubResource( 6 )
+
+[node name="Rocket" type="Sprite" parent="."]
+position = Vector2( 768, 368 )
+scale = Vector2( 0.655556, 0.655556 )
+texture = ExtResource( 3 )
+
+[node name="Title" type="Label" parent="."]
+margin_left = 24.0
+margin_right = 568.0
+margin_bottom = 259.0
+custom_colors/font_color_shadow = Color( 0, 0.831373, 1, 1 )
+custom_constants/shadow_offset_x = 6
+custom_constants/shadow_offset_y = 5
+custom_fonts/font = SubResource( 8 )
+text = "Echo
+     Night"
+valign = 1
+
+[node name="SoundCheckBox" type="CheckBox" parent="."]
+margin_left = 920.0
+margin_top = 560.0
+margin_right = 1015.0
+margin_bottom = 592.0
+custom_fonts/font = SubResource( 13 )
+pressed = true
+text = "Sound"
+align = 2
+icon_align = 1
+
+[node name="AurA" type="Sprite" parent="."]
+position = Vector2( 932, 576 )
+scale = Vector2( 0.0429688, 0.0429688 )
+texture = ExtResource( 10 )
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 12 )
+bus = "MainMenu"
+
+[node name="Label" type="Label" parent="."]
+margin_left = 24.0
+margin_top = 104.0
+margin_right = 136.0
+margin_bottom = 192.0
+rect_rotation = 1.1643
+custom_colors/font_color_shadow = Color( 0, 0.831373, 1, 1 )
+custom_constants/shadow_offset_x = 2
+custom_constants/shadow_offset_y = 2
+custom_fonts/font = SubResource( 14 )
+text = "of"
+align = 1
+valign = 1
+
+[node name="Label2" type="Label" parent="."]
+margin_left = 96.0
+margin_top = 144.0
+margin_right = 208.0
+margin_bottom = 232.0
+rect_rotation = 3.67657
+custom_colors/font_color_shadow = Color( 0, 0.831373, 1, 1 )
+custom_constants/shadow_offset_x = 2
+custom_constants/shadow_offset_y = 2
+custom_fonts/font = SubResource( 14 )
+text = "the"
+align = 1
+valign = 1
+
+[node name="Enemy" type="RigidBody2D" parent="." groups=["enemy"]]
+modulate = Color( 0.694118, 1, 0.952941, 1 )
+position = Vector2( 544, 120 )
+physics_material_override = SubResource( 9 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy"]
+shape = SubResource( 10 )
+
+[node name="Aura" type="Sprite" parent="Enemy"]
+scale = Vector2( 0.53125, 0.53125 )
+texture = ExtResource( 10 )
+
+[node name="Life_Indicator" type="Sprite" parent="Enemy"]
+modulate = Color( 0, 0.788235, 1, 0.196078 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 7 )
+
+[node name="PivotEnemyWing_pivot" type="Position2D" parent="Enemy"]
+
+[node name="EnemyWingleft" type="Sprite" parent="Enemy/PivotEnemyWing_pivot"]
+modulate = Color( 0.717647, 0.717647, 0.717647, 1 )
+position = Vector2( 109, -21 )
+scale = Vector2( 0.308594, 0.308594 )
+texture = ExtResource( 8 )
+
+[node name="PivotEnemyWing_pivot2" type="Position2D" parent="Enemy"]
+rotation = 0.361283
+
+[node name="EnymBodyWInGright" type="Sprite" parent="Enemy/PivotEnemyWing_pivot2"]
+modulate = Color( 0.742188, 0.742188, 0.742188, 1 )
+position = Vector2( -107.137, -30.6226 )
+scale = Vector2( 0.319036, 0.319036 )
+texture = ExtResource( 9 )
+
+[node name="Head" type="Position2D" parent="Enemy"]
+
+[node name="EnymBodyWInGear" type="Sprite" parent="Enemy/Head"]
+position = Vector2( 3, -62 )
+scale = Vector2( 0.15625, 0.15625 )
+texture = ExtResource( 11 )
+
+[node name="Enemy_Sprite" type="Sprite" parent="Enemy"]
+position = Vector2( 0, 0.499966 )
+scale = Vector2( 0.165631, 0.226361 )
+texture = ExtResource( 6 )
+
+[node name="EnemyC" type="Sprite" parent="Enemy"]
+scale = Vector2( 0.15625, 0.15625 )
+texture = ExtResource( 5 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Enemy"]
+autoplay = "Enemy_Anime"
+anims/Enemy_Anime = SubResource( 11 )
+anims/RESET = SubResource( 12 )
+
+[connection signal="button_down" from="Play_Button" to="." method="_on_Play_Button_button_down"]
+[connection signal="button_down" from="Help_Button" to="." method="_on_Help_Button_button_down"]
+[connection signal="button_down" from="About_Button" to="." method="_on_About_Button_button_down"]
+[connection signal="button_down" from="Exit" to="." method="_on_Exit_button_down"]
+[connection signal="toggled" from="SoundCheckBox" to="." method="_on_SoundCheckBox_toggled"]

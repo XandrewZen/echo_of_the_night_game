@@ -1,0 +1,422 @@
+[gd_scene load_steps=25 format=2]
+
+[ext_resource path="res://Script/Level.gd" type="Script" id=1]
+[ext_resource path="res://Scene/Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scene/Enemy.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Script/GUI.gd" type="Script" id=4]
+[ext_resource path="res://Script/Camera2D.gd" type="Script" id=5]
+[ext_resource path="res://Asset/texture_03.png" type="Texture" id=6]
+[ext_resource path="res://Scene/ProgressBar.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Scene/AmmoProgressBar.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Asset/Super bullet.png" type="Texture" id=9]
+[ext_resource path="res://Asset/font/Minecraft.ttf" type="DynamicFontData" id=10]
+[ext_resource path="res://Asset/tileset.tres" type="TileSet" id=11]
+[ext_resource path="res://Asset/music/enemy_music.ogg" type="AudioStream" id=12]
+
+[sub_resource type="Environment" id=1]
+background_mode = 4
+glow_enabled = true
+glow_intensity = 1.18
+glow_bloom = 0.23
+glow_blend_mode = 0
+
+[sub_resource type="Shader" id=5]
+code = "shader_type canvas_item;
+
+uniform float vignette_intensity = 0.4;
+uniform float vignette_opacity : hint_range(0.0, 1.0) = 0.5;
+uniform vec4 vignette_rgb : hint_color = vec4(0.0, 0.0, 0.0, 1.0);
+
+float vignette(vec2 uv){
+	uv *= 1.0 - uv.xy;
+	float vignette = uv.x * uv.y * 15.0;
+	return pow(vignette, vignette_intensity * vignette_opacity);
+}
+
+void fragment(){
+	vec4 color = texture(SCREEN_TEXTURE, SCREEN_UV);
+	vec4 text = texture(TEXTURE, UV);
+	
+	text.rgba *= (vignette_rgb.rgba);
+	text.rgba *= (1.0 - vignette(UV));
+	
+	COLOR = vec4((text.rgb)*color.rgb,text.a);
+}"
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = SubResource( 5 )
+shader_param/vignette_intensity = 0.4
+shader_param/vignette_opacity = 0.15
+shader_param/vignette_rgb = Color( 0, 0, 0, 1 )
+
+[sub_resource type="Animation" id=9]
+resource_name = "Enemy_death"
+length = 2.0
+step = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("Vignette:material:shader_param/vignette_opacity")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.15, 1.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Vignette:material:shader_param/vignette_intensity")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.4, 100.0 ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 2 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "exchange"
+} ]
+}
+
+[sub_resource type="Animation" id=8]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("AmmoProgressBar:value")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Vignette:material:shader_param/vignette_opacity")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.15 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Vignette:material:shader_param/vignette_intensity")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.4 ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Vignette:material:shader_param/vignette_rgb")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 0, 0, 0, 1 ) ]
+}
+
+[sub_resource type="Animation" id=7]
+resource_name = "ammo_Control"
+length = 30.0
+loop = true
+step = 1.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("AmmoProgressBar:value")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0 ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath("../Player")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 3, 6, 9, 12, 15, 18, 21, 24, 27, 30 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"values": [ {
+"args": [  ],
+"method": "shoot"
+}, {
+"args": [  ],
+"method": "shoot"
+}, {
+"args": [  ],
+"method": "shoot"
+}, {
+"args": [  ],
+"method": "shoot"
+}, {
+"args": [  ],
+"method": "shoot"
+}, {
+"args": [  ],
+"method": "shoot"
+}, {
+"args": [  ],
+"method": "shoot"
+}, {
+"args": [  ],
+"method": "shoot"
+}, {
+"args": [  ],
+"method": "shoot"
+}, {
+"args": [  ],
+"method": "shoot"
+} ]
+}
+
+[sub_resource type="Animation" id=12]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("GUI/Vignette:material:shader_param/vignette_intensity")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.4 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("GUI/Vignette:material:shader_param/vignette_opacity")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.15 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("GUI/HelpLabel:visible_characters")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 14 ]
+}
+
+[sub_resource type="Animation" id=10]
+resource_name = "startingAnime"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("GUI/Vignette:material:shader_param/vignette_intensity")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 50.0, 0.4 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("GUI/Vignette:material:shader_param/vignette_opacity")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 1.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 1.0, 0.15 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("GUI/HelpLabel:visible_characters")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 1, 1.5 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 14, 14, 0 ]
+}
+
+[sub_resource type="DynamicFont" id=11]
+size = 100
+font_data = ExtResource( 10 )
+
+[sub_resource type="PhysicsMaterial" id=4]
+bounce = 1.0
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 1034, 50 )
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 50, 753 )
+
+[node name="Level" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="BG_container" type="Node2D" parent="."]
+
+[node name="BG" type="Sprite" parent="BG_container"]
+position = Vector2( 512, 312 )
+scale = Vector2( 1, 1.04 )
+texture = ExtResource( 6 )
+
+[node name="BG2" type="Sprite" parent="BG_container"]
+position = Vector2( -408, -376 )
+scale = Vector2( 1, 1.03716 )
+texture = ExtResource( 6 )
+offset = Vector2( 1952, 664 )
+flip_v = true
+
+[node name="BG3" type="Sprite" parent="BG_container"]
+position = Vector2( -408, 226.027 )
+scale = Vector2( 1, 1.09333 )
+texture = ExtResource( 6 )
+offset = Vector2( 1952, 664 )
+flip_v = true
+
+[node name="BG4" type="Sprite" parent="BG_container"]
+position = Vector2( -1440, 225.513 )
+scale = Vector2( 1, 1.09387 )
+texture = ExtResource( 6 )
+offset = Vector2( 1952, 664 )
+
+[node name="TileMap" type="TileMap" parent="BG_container"]
+modulate = Color( 0.486275, 0.486275, 0.486275, 1 )
+tile_set = ExtResource( 11 )
+cell_size = Vector2( 128, 128 )
+format = 1
+tile_data = PoolIntArray( -1, 1, 0, -65536, 1, 0, -65535, 1, 0, -65534, 1, 0, -65533, 1, 0, -65532, 1, 0, -65531, 1, 0, -65530, 1, 0, -65529, 1, 0, -65528, 1, 0, -65527, 1, 0, -65526, 1, 0, -65525, 1, 0, -65524, 1, 0, -65523, 1, 0, -65522, 1, 0, -65521, 1, 0, -65520, 1, 0, 65535, 1, 0, 16, 1, 0, 131071, 1, 0, 65552, 1, 0, 196607, 1, 0, 131088, 1, 0, 262143, 1, 0, 196611, 1, 0, 196617, 1, 0, 196618, 1, 0, 196619, 1, 0, 196620, 1, 0, 196624, 1, 0, 327679, 1, 0, 262147, 1, 0, 262148, 1, 0, 262149, 1, 0, 262160, 1, 0, 393215, 1, 0, 327696, 1, 0, 458751, 1, 0, 393228, 1, 0, 393232, 1, 0, 524287, 1, 0, 458764, 1, 0, 458765, 1, 0, 458768, 1, 0, 589823, 1, 0, 524293, 1, 0, 524304, 1, 0, 655359, 1, 0, 589829, 1, 0, 589840, 1, 0, 720895, 1, 0, 655360, 1, 0, 655361, 1, 0, 655362, 1, 0, 655363, 1, 0, 655364, 1, 0, 655365, 1, 0, 655366, 1, 0, 655367, 1, 0, 655368, 1, 0, 655369, 1, 0, 655370, 1, 0, 655371, 1, 0, 655372, 1, 0, 655373, 1, 0, 655374, 1, 0, 655375, 1, 0, 655376, 1, 0 )
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 1 )
+
+[node name="Player" parent="." instance=ExtResource( 2 )]
+position = Vector2( 712, 296 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+current = true
+zoom = Vector2( 1.15, 1.15 )
+smoothing_enabled = true
+script = ExtResource( 5 )
+
+[node name="GUI" type="CanvasLayer" parent="."]
+script = ExtResource( 4 )
+
+[node name="Vignette" type="ColorRect" parent="GUI"]
+material = SubResource( 6 )
+margin_right = 1024.0
+margin_bottom = 608.0
+
+[node name="Player_hEALTH" parent="GUI" instance=ExtResource( 7 )]
+position = Vector2( 800, 56 )
+scale = Vector2( 1.25, 1 )
+
+[node name="AmmoProgressBar" parent="GUI" instance=ExtResource( 8 )]
+position = Vector2( 840, 96 )
+value = 0.0
+
+[node name="SuperBullet" type="Sprite" parent="GUI"]
+position = Vector2( 949, 100 )
+rotation = 1.5708
+scale = Vector2( 0.00858208, 0.0177936 )
+texture = ExtResource( 9 )
+
+[node name="SuperBullet2" type="Sprite" parent="GUI"]
+position = Vector2( 949, 94 )
+rotation = 1.5708
+scale = Vector2( 0.00858208, 0.0177936 )
+texture = ExtResource( 9 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="GUI"]
+autoplay = "ammo_Control"
+anims/Enemy_death = SubResource( 9 )
+anims/RESET = SubResource( 8 )
+anims/ammo_Control = SubResource( 7 )
+
+[node name="StartAnimationPlayer" type="AnimationPlayer" parent="GUI"]
+root_node = NodePath("../..")
+autoplay = "startingAnime"
+anims/RESET = SubResource( 12 )
+anims/startingAnime = SubResource( 10 )
+
+[node name="HelpLabel" type="Label" parent="GUI"]
+margin_right = 1024.0
+margin_bottom = 592.0
+custom_fonts/font = SubResource( 11 )
+text = "Destroy the aura"
+align = 1
+valign = 1
+
+[node name="wall" type="StaticBody2D" parent="."]
+physics_material_override = SubResource( 4 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="wall"]
+position = Vector2( 1024, -48 )
+shape = SubResource( 2 )
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="wall"]
+position = Vector2( 1024, 1328 )
+shape = SubResource( 2 )
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="wall"]
+position = Vector2( -48, 646 )
+shape = SubResource( 3 )
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="wall"]
+position = Vector2( 2104, 623 )
+shape = SubResource( 3 )
+
+[node name="Enemy" parent="." instance=ExtResource( 3 )]
+position = Vector2( 512, 320 )
+
+[node name="BG_player" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 12 )
+
+[connection signal="i_enemy_died" from="Enemy" to="GUI" method="_on_Enemy_i_enemy_died"]
