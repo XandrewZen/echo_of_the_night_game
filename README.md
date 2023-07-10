@@ -5,7 +5,7 @@ Used tools:
 -- Godot Game Engine  
 -- Photopea  
 
-..About Us:
+About Us:
 We are Codebreakers 2020. Ex-developer of Bahini Game.
 Members: Rafat (IUT) , Zarif (CU) , Mokarrom (BSMRMU)
 We felt our passion for game dev when studying in Bogura Zilla School.
