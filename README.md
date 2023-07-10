@@ -1,7 +1,7 @@
 # echo_of_the_night_game
 our submission for BUET CSE Fest 2023 Game Jam.
 
-The theme was : "You Are Your Enemy".
+The theme was : "You Are Your Enemy".  
 Our implementation: The player is in a mission to kill a bat-like devil.
 The mother bat has a special power to convert your bullets into child bat but it reduces her life.
 The mother bat can not hit the player directly but she can produce children which can deal damage to player if the player is in the red range. Therefore,
